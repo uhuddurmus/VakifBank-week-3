@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BookStore.BookOperations.DeleteBook;
+using BookStore.BookOperations.GetBookDetail;
+using FluentValidation;
 using WebApi.Common;
 using WebApi.DbOperations;
 
@@ -26,6 +29,14 @@ public class GetBookDetailQuery
     // Belirli bir kitabýn ayrýntýlarýný getirmek için kullanýlan metot.
     public BookDetailViewModel Handle()
     {
+        //Validasyon iþlemleri
+
+        var validator = new GetBookDetailQueryValidator();
+        var validationResult = validator.Validate(this);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
         // Veritabanýndan, belirtilen kimliðe sahip kitabý buluyoruz veya varsayýlan olarak null dönüyoruz.
         var book = _dbContext.Books.Where(book => book.Id == BookId).SingleOrDefault();
 

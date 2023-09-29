@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using AutoMapper;
+using BookStore.BookOperations.CreateBook;
+using FluentValidation;
 using WebApi.DbOperations;
 
 namespace WebApi.BookOperations.CreateBook;
@@ -23,7 +25,17 @@ public class CreateBookCommand
     // Handle metodu, yeni kitap oluþturma iþlemini gerçekleþtirir.
     public void Handle()
     {
+
+        //Validasyon iþlemleri
+
+        var validator = new CreateBookCommandValidator();
+        var validationResult = validator.Validate(this);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
         // Kitap baþlýðýna göre veritabanýnda mevcut bir kitap arar.
+
         var book = _dbContext.Books.SingleOrDefault(x => x.Title == Model.Title);
 
         // Eðer kitap zaten mevcutsa bir istisna (exception) fýrlatýlýr.

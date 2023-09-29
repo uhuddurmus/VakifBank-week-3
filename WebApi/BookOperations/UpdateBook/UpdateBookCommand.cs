@@ -1,3 +1,6 @@
+using BookStore.BookOperations.GetBookDetail;
+using BookStore.BookOperations.UpdateBook;
+using FluentValidation;
 using System;
 using System.Linq;
 using WebApi.DbOperations;
@@ -22,6 +25,16 @@ public class UpdateBookCommand
     // Handle metodu, kitap güncelleme iþlemini gerçekleþtirir.
     public void Handle()
     {
+
+        //Validasyon iþlemleri
+
+        var validator = new UpdateBookCommandValidator();
+        var validationResult = validator.Validate(this);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
         // Belirtilen ID'ye sahip kitabý veritabanýndan alýr.
         var book = _dbContext.Books.SingleOrDefault(x => x.Id == BookId);
 

@@ -42,6 +42,8 @@ public class Startup
 
         // AutoMapper kullanýmýný yapýlandýrýr
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+
     }
 
     // Uygulamanýn yapýlandýrýlmasý
